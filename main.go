@@ -1,7 +1,7 @@
 package main
 
 import (
-	"devbook-api/src/router"
+	"devbook-api/src/app/router"
 	"log"
 	"net/http"
 )
