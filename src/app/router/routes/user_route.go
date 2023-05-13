@@ -1,41 +1,44 @@
 package routes
 
-import "net/http"
+import (
+	controllers "devbook-api/src/app/controllers/user"
+	"net/http"
+)
 
 var UserRoutes = []Route{
 	// CREATE USER ROUTE
 	{
 		Uri:       "/user",
 		Method:    http.MethodPost,
-		Handler:   func(http.ResponseWriter, *http.Request) {},
+		Handler:   controllers.UserCreateController,
 		IsPrivate: false,
 	},
-	// GET ALL USERS ROUTE
+	// FIND ALL USERS ROUTE
 	{
 		Uri:       "/user",
 		Method:    http.MethodGet,
-		Handler:   func(http.ResponseWriter, *http.Request) {},
+		Handler:   controllers.UserFindAllController,
 		IsPrivate: false,
 	},
-	// GET ONE USER ROUTE
+	// FIND ONE USER ROUTE
 	{
 		Uri:       "/user/{id}",
 		Method:    http.MethodGet,
-		Handler:   func(http.ResponseWriter, *http.Request) {},
+		Handler:   controllers.UserFindOneController,
 		IsPrivate: false,
 	},
 	// UPDATE USER ROUTE
 	{
 		Uri:       "/user/{id}",
 		Method:    http.MethodPut,
-		Handler:   func(http.ResponseWriter, *http.Request) {},
+		Handler:   controllers.UserUpdateController,
 		IsPrivate: false,
 	},
 	// DELETE USER ROUTE
 	{
 		Uri:       "/user/{id}",
 		Method:    http.MethodDelete,
-		Handler:   func(http.ResponseWriter, *http.Request) {},
+		Handler:   controllers.UserDeleteController,
 		IsPrivate: false,
 	},
 }
