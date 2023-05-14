@@ -30,6 +30,9 @@ func UserCreateController(w http.ResponseWriter, r *http.Request) {
 
 	userRepository := repository.GetUserRepository(db)
 	createdUserId, err := userRepository.Create(user)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(fmt.Sprintf("%d", createdUserId)))
