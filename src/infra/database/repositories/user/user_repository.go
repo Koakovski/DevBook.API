@@ -66,3 +66,28 @@ func (userRepository userRepository) FindAll(nameOrNickName string) ([]model.Use
 
 	return users, nil
 }
+
+func (userRepository userRepository) FindById(userId uint64) (model.User, error) {
+	var user model.User
+
+	rows, err := userRepository.db.Query(
+		"SELECT id, name, nickName, email, createdAt FROM users WHERE id = ?", userId,
+	)
+	if err != nil {
+		return user, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		if err = rows.Scan(
+			&user.ID,
+			&user.Name,
+			&user.NickName,
+			&user.Email,
+			&user.CreatedAt); err != nil {
+			return user, err
+		}
+	}
+
+	return user, nil
+}
