@@ -23,6 +23,11 @@ func UserCreateController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err = user.Prepare(); err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
 	db, err := database.GetDbConnection()
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
