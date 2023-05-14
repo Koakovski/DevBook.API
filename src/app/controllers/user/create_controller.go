@@ -2,29 +2,15 @@ package controller
 
 import (
 	presenter "devbook-api/src/app/presenters"
-	model "devbook-api/src/domain/models"
 	"devbook-api/src/infra/database"
 	repository "devbook-api/src/infra/database/repositories/user"
-	"encoding/json"
-	"io"
 	"net/http"
 )
 
 func UserCreateController(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(r.Body)
+	user, err, statusCode := GetUserFromBody(r, false)
 	if err != nil {
-		presenter.ErrorPresenter(w, http.StatusUnprocessableEntity, err)
-		return
-	}
-
-	var user model.User
-	if err = json.Unmarshal(body, &user); err != nil {
-		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
-		return
-	}
-
-	if err = user.Prepare(); err != nil {
-		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		presenter.ErrorPresenter(w, statusCode, err)
 		return
 	}
 

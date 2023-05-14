@@ -5,15 +5,10 @@ import (
 	"devbook-api/src/infra/database"
 	repository "devbook-api/src/infra/database/repositories/user"
 	"net/http"
-	"strconv"
-
-	"github.com/gorilla/mux"
 )
 
 func UserFindOneController(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-
-	userId, err := strconv.ParseUint(params["id"], 10, 64)
+	userId, err := GetUserId(r)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
