@@ -2,6 +2,7 @@ package controller
 
 import (
 	presenter "devbook-api/src/app/presenters"
+	model "devbook-api/src/domain/models"
 	"devbook-api/src/infra/database"
 	repository "devbook-api/src/infra/database/repositories/user"
 	"net/http"
@@ -14,9 +15,15 @@ func UserUpdateController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err, statusCode := GetUserFromBody(r, true)
+	var userModel model.User
+	statusCode, err := GetDataFromBody(r, userModel, true)
 	if err != nil {
 		presenter.ErrorPresenter(w, statusCode, err)
+		return
+	}
+
+	if err = userModel.Prepare(true); err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -29,7 +36,7 @@ func UserUpdateController(w http.ResponseWriter, r *http.Request) {
 
 	userRepository := repository.GetUserRepository(db)
 
-	if err = userRepository.Update(userId, user); err != nil {
+	if err = userRepository.Update(userId, userModel); err != nil {
 		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
 		return
 	}
