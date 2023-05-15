@@ -2,16 +2,18 @@ package controller
 
 import (
 	presenter "devbook-api/src/app/presenters"
+	model "devbook-api/src/domain/models"
 	"devbook-api/src/infra/database"
 	repository "devbook-api/src/infra/database/repositories/user"
+	"devbook-api/src/infra/security"
 	"net/http"
-	"strconv"
 )
 
-func UserFindOneController(w http.ResponseWriter, r *http.Request) {
-	userId, err := GetUserId(r)
+func AuthLoginController(w http.ResponseWriter, r *http.Request) {
+	var userModel model.User
+	statusCode, err := GetDataFromBody(r, userModel, false)
 	if err != nil {
-		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		presenter.ErrorPresenter(w, statusCode, err)
 		return
 	}
 
@@ -24,16 +26,16 @@ func UserFindOneController(w http.ResponseWriter, r *http.Request) {
 
 	userRepository := repository.GetUserRepository(db)
 
-	user, err := userRepository.FindById(userId)
+	databaseUser, err := userRepository.FindByEmail(userModel.Email)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	if strconv.Itoa(int(user.ID)) != "" {
-		presenter.ReponsePresenter(w, http.StatusBadRequest, nil)
+	if err = security.ComparePassword(userModel.Password, databaseUser.Password); err != nil {
+		presenter.ErrorPresenter(w, http.StatusUnauthorized, err)
 		return
 	}
 
-	presenter.ReponsePresenter(w, http.StatusOK, user)
+	w.Write([]byte("Logado"))
 }

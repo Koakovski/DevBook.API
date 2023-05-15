@@ -1,7 +1,7 @@
 package route
 
 import (
-	controller "devbook-api/src/app/controllers/user"
+	controller "devbook-api/src/app/controllers"
 	"net/http"
 )
 
