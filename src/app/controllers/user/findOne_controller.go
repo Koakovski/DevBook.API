@@ -5,6 +5,7 @@ import (
 	"devbook-api/src/infra/database"
 	repository "devbook-api/src/infra/database/repositories/user"
 	"net/http"
+	"strconv"
 )
 
 func UserFindOneController(w http.ResponseWriter, r *http.Request) {
@@ -26,6 +27,11 @@ func UserFindOneController(w http.ResponseWriter, r *http.Request) {
 	user, err := userRepository.FindById(userId)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if strconv.Itoa(int(user.ID)) != "" {
+		presenter.ReponsePresenter(w, http.StatusBadRequest, nil)
 		return
 	}
 
