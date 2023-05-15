@@ -1,6 +1,7 @@
 package model
 
 import (
+	"devbook-api/src/infra/security"
 	"errors"
 	"strings"
 	"time"
@@ -22,7 +23,9 @@ func (user *User) Prepare(isUpdate bool) error {
 		return err
 	}
 
-	user.format()
+	if err := user.format(isUpdate); err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -51,8 +54,19 @@ func (user *User) validate(isUpdate bool) error {
 	return nil
 }
 
-func (user *User) format() {
+func (user *User) format(isUpdate bool) error {
 	user.Name = strings.TrimSpace(user.Name)
 	user.Email = strings.TrimSpace(user.Email)
 	user.NickName = strings.TrimSpace(user.NickName)
+
+	if !isUpdate {
+		hashedPassword, err := security.HashPassword(user.Password)
+		if err != nil {
+			return err
+		}
+
+		user.Password = string(hashedPassword)
+	}
+
+	return nil
 }
