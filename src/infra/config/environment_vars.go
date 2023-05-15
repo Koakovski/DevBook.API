@@ -12,6 +12,7 @@ import (
 var (
 	DatabaseConnectionString = ""
 	ApiPort                  = 0
+	SecretKey                []byte
 )
 
 func LoadEnv() {
@@ -30,6 +31,7 @@ func LoadEnv() {
 		DATABASE_USER     = os.Getenv("DATABASE_USER")
 		DATABASE_PASSWORD = os.Getenv("DATABASE_PASSWORD")
 		DATABASE_NAME     = os.Getenv("DATABASE_NAME")
+		SECRET_KEY        = os.Getenv("SECRET_KEY")
 	)
 
 	DatabaseConnectionString = fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
@@ -37,4 +39,6 @@ func LoadEnv() {
 		DATABASE_PASSWORD,
 		DATABASE_NAME,
 	)
+
+	SecretKey = []byte(SECRET_KEY)
 }
