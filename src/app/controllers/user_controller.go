@@ -12,13 +12,13 @@ import (
 
 func UserCreateController(w http.ResponseWriter, r *http.Request) {
 	var userModel model.User
-	statusCode, err := GetDataFromBody(r, userModel, false)
+	statusCode, err := GetDataFromBody(r, &userModel, false)
 	if err != nil {
 		presenter.ErrorPresenter(w, statusCode, err)
 		return
 	}
 
-	if err = userModel.Prepare(true); err != nil {
+	if err = userModel.Prepare(false); err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
 	}
@@ -124,7 +124,7 @@ func UserUpdateController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var userModel model.User
-	statusCode, err := GetDataFromBody(r, userModel, true)
+	statusCode, err := GetDataFromBody(r, &userModel, true)
 	if err != nil {
 		presenter.ErrorPresenter(w, statusCode, err)
 		return
