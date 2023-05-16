@@ -35,14 +35,14 @@ func GetUserId(r *http.Request) (uint64, error) {
 	return userId, nil
 }
 
-func IsUserAllowed(r *http.Request, affectedUserId uint64) (statusCode int, err error) {
+func IsUserAllowed(r *http.Request, affectedUserId uint64) (userId uint64, statusCode int, err error) {
 	requestingUserId, err := auth.ExtractUserId(r)
 	if err != nil {
-		return http.StatusUnauthorized, err
+		return 0, http.StatusUnauthorized, err
 	}
 	if requestingUserId != affectedUserId {
-		return http.StatusForbidden, errors.New("not allowed")
+		return 0, http.StatusForbidden, errors.New("not allowed")
 	}
 
-	return 0, nil
+	return requestingUserId, 0, nil
 }

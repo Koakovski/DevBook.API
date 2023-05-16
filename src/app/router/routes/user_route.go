@@ -41,4 +41,11 @@ var UserRoutes = []Route{
 		Handler:   controller.UserDeleteController,
 		IsPrivate: true,
 	},
+	// FOLLOW A USER
+	{
+		Uri:       "/user/{id}/follow",
+		Method:    http.MethodPost,
+		Handler:   controller.UserFollowUserController,
+		IsPrivate: true,
+	},
 }

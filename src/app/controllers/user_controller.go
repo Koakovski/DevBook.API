@@ -3,6 +3,7 @@ package controller
 import (
 	presenter "devbook-api/src/app/presenters"
 	model "devbook-api/src/domain/models"
+	"devbook-api/src/infra/auth"
 	"devbook-api/src/infra/database"
 	repository "devbook-api/src/infra/database/repositories/user"
 	"errors"
@@ -49,7 +50,7 @@ func UserDeleteController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	statusCode, err := IsUserAllowed(r, userId)
+	_, statusCode, err := IsUserAllowed(r, userId)
 	if err != nil {
 		presenter.ErrorPresenter(w, statusCode, err)
 		return
@@ -136,7 +137,7 @@ func UserUpdateController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	statusCode, err = IsUserAllowed(r, userId)
+	_, statusCode, err = IsUserAllowed(r, userId)
 	if err != nil {
 		presenter.ErrorPresenter(w, statusCode, err)
 		return
@@ -157,6 +158,41 @@ func UserUpdateController(w http.ResponseWriter, r *http.Request) {
 	userRepository := repository.GetUserRepository(db)
 
 	if err = userRepository.Update(userId, userModel); err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	presenter.ReponsePresenter(w, http.StatusNoContent, nil)
+}
+
+func UserFollowUserController(w http.ResponseWriter, r *http.Request) {
+	userToFollowId, err := GetUserId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
+	requestingUserId, err := auth.ExtractUserId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	if userToFollowId == requestingUserId {
+		presenter.ErrorPresenter(w, http.StatusForbidden, errors.New("user cannot follow himself"))
+		return
+	}
+
+	db, err := database.GetDbConnection()
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	userRepository := repository.GetUserRepository(db)
+
+	if err = userRepository.Follow(requestingUserId, userToFollowId); err != nil {
 		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
 		return
 	}
