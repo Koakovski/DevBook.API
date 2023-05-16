@@ -24,7 +24,7 @@ func GetDataFromBody(r *http.Request, value any, isUpdate bool) (statusCode int,
 	return 0, nil
 }
 
-func GetUserId(r *http.Request) (uint64, error) {
+func GetId(r *http.Request) (uint64, error) {
 	params := mux.Vars(r)
 
 	userId, err := strconv.ParseUint(params["id"], 10, 64)

@@ -39,3 +39,39 @@ func (publicationRepository publicationRepository) Create(publicationModel model
 
 	return uint64(publicationId), nil
 }
+func (publicationRepository publicationRepository) FindById(publicationId uint64) (model.Publication, error) {
+	var publication model.Publication
+
+	rows, err := publicationRepository.db.Query(`
+		SELECT p.id, p.title, p.content, p.likes, p.authorId, p.createdAt, 
+		u.id, u.name, u.nickName, u.email, u.createdAt FROM publications p
+		INNER JOIN users u
+		ON u.id = p.authorId 
+		WHERE p.id = ?
+	`, publicationId,
+	)
+	if err != nil {
+		return publication, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		if err = rows.Scan(
+			&publication.ID,
+			&publication.Title,
+			&publication.Content,
+			&publication.Likes,
+			&publication.AuthorId,
+			&publication.CreatedAt,
+			&publication.Author.ID,
+			&publication.Author.Name,
+			&publication.Author.NickName,
+			&publication.Author.Email,
+			&publication.Author.CreatedAt,
+		); err != nil {
+			return publication, err
+		}
+	}
+
+	return publication, nil
+}

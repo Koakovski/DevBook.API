@@ -45,7 +45,7 @@ func UserCreateController(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserDeleteController(w http.ResponseWriter, r *http.Request) {
-	userId, err := GetUserId(r)
+	userId, err := GetId(r)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
@@ -95,7 +95,7 @@ func UserFindAllController(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserFindOneController(w http.ResponseWriter, r *http.Request) {
-	userId, err := GetUserId(r)
+	userId, err := GetId(r)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
@@ -125,7 +125,7 @@ func UserFindOneController(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserUpdateController(w http.ResponseWriter, r *http.Request) {
-	userId, err := GetUserId(r)
+	userId, err := GetId(r)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
@@ -167,7 +167,7 @@ func UserUpdateController(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserFollowUserController(w http.ResponseWriter, r *http.Request) {
-	userToFollowId, err := GetUserId(r)
+	userToFollowId, err := GetId(r)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
@@ -202,7 +202,7 @@ func UserFollowUserController(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserUnfollowUserController(w http.ResponseWriter, r *http.Request) {
-	userToUnfollowId, err := GetUserId(r)
+	userToUnfollowId, err := GetId(r)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
@@ -237,7 +237,7 @@ func UserUnfollowUserController(w http.ResponseWriter, r *http.Request) {
 }
 
 func UserFindAllUserFollowersController(w http.ResponseWriter, r *http.Request) {
-	userId, err := GetUserId(r)
+	userId, err := GetId(r)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
@@ -262,7 +262,7 @@ func UserFindAllUserFollowersController(w http.ResponseWriter, r *http.Request) 
 }
 
 func UserFindAllUserFollowingController(w http.ResponseWriter, r *http.Request) {
-	userId, err := GetUserId(r)
+	userId, err := GetId(r)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
@@ -287,7 +287,7 @@ func UserFindAllUserFollowingController(w http.ResponseWriter, r *http.Request) 
 }
 
 func UserUpdatePasswordController(w http.ResponseWriter, r *http.Request) {
-	userId, err := GetUserId(r)
+	userId, err := GetId(r)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return

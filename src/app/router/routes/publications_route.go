@@ -24,11 +24,9 @@ var PublicationRoute = []Route{
 	},
 	// FIND ONE PUBLICATION
 	{
-		Uri:    "/publication/{id}",
-		Method: http.MethodGet,
-		Handler: func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("FIND ONE PUBLICATION"))
-		},
+		Uri:       "/publication/{id}",
+		Method:    http.MethodGet,
+		Handler:   controller.PublicationFindOneController,
 		IsPrivate: false,
 	},
 	// UPDATE PUBLICATION
