@@ -71,7 +71,7 @@ func (userRepository userRepository) FindById(userId uint64) (model.User, error)
 	var user model.User
 
 	rows, err := userRepository.db.Query(
-		"SELECT id, name, nickName, email, createdAt FROM users WHERE id = ?", userId,
+		"SELECT id, name, nickName, password, email, createdAt FROM users WHERE id = ?", userId,
 	)
 	if err != nil {
 		return user, err
@@ -83,6 +83,7 @@ func (userRepository userRepository) FindById(userId uint64) (model.User, error)
 			&user.ID,
 			&user.Name,
 			&user.NickName,
+			&user.Password,
 			&user.Email,
 			&user.CreatedAt); err != nil {
 			return user, err
