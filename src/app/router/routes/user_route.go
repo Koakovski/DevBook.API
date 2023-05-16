@@ -55,4 +55,11 @@ var UserRoutes = []Route{
 		Handler:   controller.UserUnfollowUserController,
 		IsPrivate: true,
 	},
+	// FIND ALL FOLLOWERS OF A USER
+	{
+		Uri:       "/user/{id}/followers",
+		Method:    http.MethodGet,
+		Handler:   controller.UserFindAllUserFollowersController,
+		IsPrivate: true,
+	},
 }

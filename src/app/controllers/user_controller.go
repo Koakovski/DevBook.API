@@ -234,3 +234,28 @@ func UserUnfollowUserController(w http.ResponseWriter, r *http.Request) {
 
 	presenter.ReponsePresenter(w, http.StatusNoContent, nil)
 }
+
+func UserFindAllUserFollowersController(w http.ResponseWriter, r *http.Request) {
+	userId, err := GetUserId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
+	db, err := database.GetDbConnection()
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	userRepository := repository.GetUserRepository(db)
+
+	followers, err := userRepository.FindAllUserFollowers(userId)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	presenter.ReponsePresenter(w, http.StatusOK, followers)
+}
