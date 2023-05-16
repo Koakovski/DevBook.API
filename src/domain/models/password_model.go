@@ -11,11 +11,11 @@ type Password struct {
 
 func (password *Password) Validate() error {
 	if password.CurrentPassword == "" {
-		return errors.New("naCurrentPasswordme is missing")
+		return errors.New("CurrentPassword is missing")
 	}
 
 	if password.NewPassword == "" {
-		return errors.New("naCurrentPasswordme is missing")
+		return errors.New("NewPassword is missing")
 	}
 
 	return nil
