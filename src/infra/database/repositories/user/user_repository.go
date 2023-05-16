@@ -233,3 +233,19 @@ func (userRepository userRepository) FindAllUserFollowing(userId uint64) ([]mode
 
 	return users, nil
 }
+
+func (userRepository userRepository) UpdatePassword(password string, userId uint64) error {
+	statment, err := userRepository.db.Prepare(
+		"UPDATE users SET password = ? WHERE id = ?",
+	)
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err = statment.Exec(password, userId); err != nil {
+		return err
+	}
+
+	return nil
+}
