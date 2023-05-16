@@ -24,7 +24,7 @@ func PublicationCreateController(w http.ResponseWriter, r *http.Request) {
 	}
 	publicationModel.AuthorId = requestingUserId
 
-	if err := publicationModel.Validate(); err != nil {
+	if err := publicationModel.Prepare(); err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
 		return
 	}

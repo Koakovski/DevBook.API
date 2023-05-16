@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"strings"
 	"time"
 )
 
@@ -15,7 +16,19 @@ type Publication struct {
 	CreatedAt time.Time `json:"createdAt,omitempty"`
 }
 
-func (publication *Publication) Validate() error {
+func (publication *Publication) Prepare() error {
+	if err := publication.validate(); err != nil {
+		return err
+	}
+
+	if err := publication.format(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (publication *Publication) validate() error {
 	if publication.Title == "" {
 		return errors.New("title is missing")
 	}
@@ -23,6 +36,13 @@ func (publication *Publication) Validate() error {
 	if publication.Content == "" {
 		return errors.New("content is missing")
 	}
+
+	return nil
+}
+
+func (publication *Publication) format() error {
+	publication.Title = strings.TrimSpace(publication.Title)
+	publication.Content = strings.TrimSpace(publication.Content)
 
 	return nil
 }
