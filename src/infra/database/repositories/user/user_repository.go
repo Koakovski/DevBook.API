@@ -203,3 +203,33 @@ func (userRepository userRepository) FindAllUserFollowers(userId uint64) ([]mode
 
 	return users, nil
 }
+
+func (userRepository userRepository) FindAllUserFollowing(userId uint64) ([]model.User, error) {
+	var users []model.User
+
+	rows, err := userRepository.db.Query(`
+		SELECT u.id, u.name, u.nickname, u.email, u.createdAt	FROM users u 
+		INNER JOIN followers f ON u.id = f.userId
+		WHERE f.followerId = ?
+	`, userId)
+	if err != nil {
+		return users, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var user model.User
+		if err = rows.Scan(
+			&user.ID,
+			&user.Name,
+			&user.NickName,
+			&user.Email,
+			&user.CreatedAt); err != nil {
+			return users, err
+		}
+
+		users = append(users, user)
+	}
+
+	return users, nil
+}
