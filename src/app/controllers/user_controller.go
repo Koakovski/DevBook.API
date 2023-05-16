@@ -6,6 +6,7 @@ import (
 	"devbook-api/src/infra/auth"
 	"devbook-api/src/infra/database"
 	repository "devbook-api/src/infra/database/repositories/user"
+	"devbook-api/src/infra/security"
 	"errors"
 	"net/http"
 	"strings"
@@ -283,4 +284,62 @@ func UserFindAllUserFollowingController(w http.ResponseWriter, r *http.Request) 
 	}
 
 	presenter.ReponsePresenter(w, http.StatusOK, followers)
+}
+
+func UserUpdatePasswordController(w http.ResponseWriter, r *http.Request) {
+	userId, err := GetUserId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
+	requestingUserId, statusCode, err := IsUserAllowed(r, userId)
+	if err != nil {
+		presenter.ErrorPresenter(w, statusCode, err)
+		return
+	}
+
+	var passwordModel model.Password
+	statusCode, err = GetDataFromBody(r, &passwordModel, true)
+	if err != nil {
+		presenter.ErrorPresenter(w, statusCode, err)
+		return
+	}
+
+	if err := passwordModel.Validate(); err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
+	db, err := database.GetDbConnection()
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	userRepository := repository.GetUserRepository(db)
+	databaseUser, err := userRepository.FindById(requestingUserId)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := security.ComparePassword(databaseUser.Password, passwordModel.CurrentPassword); err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, errors.New("current password don't match"))
+		return
+	}
+
+	newPasswordHashed, err := security.HashPassword(passwordModel.NewPassword)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err := userRepository.UpdatePassword(string(newPasswordHashed), requestingUserId); err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
+	presenter.ReponsePresenter(w, http.StatusNoContent, nil)
 }

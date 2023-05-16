@@ -69,4 +69,11 @@ var UserRoutes = []Route{
 		Handler:   controller.UserFindAllUserFollowingController,
 		IsPrivate: true,
 	},
+	// UPDATE USER PASSWORD
+	{
+		Uri:       "/user/{id}/updatePassword",
+		Method:    http.MethodPost,
+		Handler:   controller.UserUpdatePasswordController,
+		IsPrivate: true,
+	},
 }
