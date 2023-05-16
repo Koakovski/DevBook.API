@@ -5,8 +5,8 @@ import (
 	model "devbook-api/src/domain/models"
 	"devbook-api/src/infra/database"
 	repository "devbook-api/src/infra/database/repositories/user"
+	"errors"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
@@ -108,8 +108,8 @@ func UserFindOneController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if strconv.Itoa(int(user.ID)) != "" {
-		presenter.ReponsePresenter(w, http.StatusBadRequest, nil)
+	if user.ID == 0 {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, errors.New("no user found"))
 		return
 	}
 
