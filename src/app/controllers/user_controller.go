@@ -199,3 +199,38 @@ func UserFollowUserController(w http.ResponseWriter, r *http.Request) {
 
 	presenter.ReponsePresenter(w, http.StatusNoContent, nil)
 }
+
+func UserUnfollowUserController(w http.ResponseWriter, r *http.Request) {
+	userToUnfollowId, err := GetUserId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
+	requestingUserId, err := auth.ExtractUserId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	if userToUnfollowId == requestingUserId {
+		presenter.ErrorPresenter(w, http.StatusForbidden, errors.New("user cannot unfollow himself"))
+		return
+	}
+
+	db, err := database.GetDbConnection()
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	userRepository := repository.GetUserRepository(db)
+
+	if err = userRepository.Unfollow(requestingUserId, userToUnfollowId); err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	presenter.ReponsePresenter(w, http.StatusNoContent, nil)
+}
