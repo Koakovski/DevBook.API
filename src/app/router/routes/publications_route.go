@@ -1,17 +1,16 @@
 package route
 
 import (
+	controller "devbook-api/src/app/controllers"
 	"net/http"
 )
 
 var PublicationRoute = []Route{
 	// CREATE A PUBLICATION
 	{
-		Uri:    "/publication",
-		Method: http.MethodPost,
-		Handler: func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("CREATE A PUBLICATION"))
-		},
+		Uri:       "/publication",
+		Method:    http.MethodPost,
+		Handler:   controller.PublicationCreateController,
 		IsPrivate: false,
 	},
 	// FIND ALL PUBLICATIONS

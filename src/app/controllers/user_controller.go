@@ -5,7 +5,7 @@ import (
 	model "devbook-api/src/domain/models"
 	"devbook-api/src/infra/auth"
 	"devbook-api/src/infra/database"
-	repository "devbook-api/src/infra/database/repositories/user"
+	repository "devbook-api/src/infra/database/repositories"
 	"devbook-api/src/infra/security"
 	"errors"
 	"net/http"
