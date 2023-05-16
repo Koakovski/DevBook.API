@@ -3,6 +3,7 @@ package controller
 import (
 	presenter "devbook-api/src/app/presenters"
 	model "devbook-api/src/domain/models"
+	"devbook-api/src/infra/auth"
 	"devbook-api/src/infra/database"
 	repository "devbook-api/src/infra/database/repositories/user"
 	"errors"
@@ -127,6 +128,16 @@ func UserUpdateController(w http.ResponseWriter, r *http.Request) {
 	statusCode, err := GetDataFromBody(r, &userModel, true)
 	if err != nil {
 		presenter.ErrorPresenter(w, statusCode, err)
+		return
+	}
+
+	requestingUserId, err := auth.ExtractUserId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusUnauthorized, err)
+		return
+	}
+	if requestingUserId != userId {
+		presenter.ErrorPresenter(w, http.StatusForbidden, errors.New("not allowed"))
 		return
 	}
 

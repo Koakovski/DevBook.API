@@ -18,27 +18,27 @@ var UserRoutes = []Route{
 		Uri:       "/user",
 		Method:    http.MethodGet,
 		Handler:   controller.UserFindAllController,
-		IsPrivate: false,
+		IsPrivate: true,
 	},
 	// FIND ONE USER ROUTE
 	{
 		Uri:       "/user/{id}",
 		Method:    http.MethodGet,
 		Handler:   controller.UserFindOneController,
-		IsPrivate: false,
+		IsPrivate: true,
 	},
 	// UPDATE USER ROUTE
 	{
 		Uri:       "/user/{id}",
 		Method:    http.MethodPut,
 		Handler:   controller.UserUpdateController,
-		IsPrivate: false,
+		IsPrivate: true,
 	},
 	// DELETE USER ROUTE
 	{
 		Uri:       "/user/{id}",
 		Method:    http.MethodDelete,
 		Handler:   controller.UserDeleteController,
-		IsPrivate: false,
+		IsPrivate: true,
 	},
 }
