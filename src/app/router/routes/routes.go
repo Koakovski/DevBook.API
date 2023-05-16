@@ -17,6 +17,7 @@ type Route struct {
 
 func ConfigureRoutes(router *mux.Router) *mux.Router {
 	routes := append(UserRoutes, AuthRoutes...)
+	routes = append(routes, PublicationRoute...)
 
 	for _, route := range routes {
 		if route.IsPrivate {
