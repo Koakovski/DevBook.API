@@ -1,8 +1,10 @@
 INSERT INTO users (name, nickName, email, password) 
 VALUES 
-("Higor k.", "koakovski", "hkoakovskip@gmail.com", "$2a$10$KJUSbHT6IXCNHBH2SrWtKOzx3XOAj2JZN2oArwqBD7ftwMWpbJxmi"),
-("Pedro R.", "rosa", "pedrorosa@gmail.com", "$2a$10$KJUSbHT6IXCNHBH2SrWtKOzx3XOAj2JZN2oArwqBD7ftwMWpbJxmi"),
-("Luis Q.", "queiroz", "luisqueiroz@gmail.com", "$2a$10$KJUSbHT6IXCNHBH2SrWtKOzx3XOAj2JZN2oArwqBD7ftwMWpbJxmi");
+("Higor k.", "koakovski", "hkoakovskip@gmail.com", "$2a$10$XLt1xr7rm3OQavA7hC3MxOGbIj4j6kSiYuYXLtsQv.P02pigEvYTW"),
+("Pedro R.", "rosa", "pedrorosa@gmail.com", "$2a$10$XLt1xr7rm3OQavA7hC3MxOGbIj4j6kSiYuYXLtsQv.P02pigEvYTW"),
+("Luis Q.", "queiroz", "luisqueiroz@gmail.com", "$2a$10$XLt1xr7rm3OQavA7hC3MxOGbIj4j6kSiYuYXLtsQv.P02pigEvYTW");
+
+-- passwords: Lace-4242
 
 INSERT INTO followers (userId, followerId) 
 VALUES 
