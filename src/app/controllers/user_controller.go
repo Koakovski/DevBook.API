@@ -3,7 +3,6 @@ package controller
 import (
 	presenter "devbook-api/src/app/presenters"
 	model "devbook-api/src/domain/models"
-	"devbook-api/src/infra/auth"
 	"devbook-api/src/infra/database"
 	repository "devbook-api/src/infra/database/repositories/user"
 	"errors"
@@ -47,6 +46,12 @@ func UserDeleteController(w http.ResponseWriter, r *http.Request) {
 	userId, err := GetUserId(r)
 	if err != nil {
 		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
+	statusCode, err := IsUserAllowed(r, userId)
+	if err != nil {
+		presenter.ErrorPresenter(w, statusCode, err)
 		return
 	}
 
@@ -131,13 +136,9 @@ func UserUpdateController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	requestingUserId, err := auth.ExtractUserId(r)
+	statusCode, err = IsUserAllowed(r, userId)
 	if err != nil {
-		presenter.ErrorPresenter(w, http.StatusUnauthorized, err)
-		return
-	}
-	if requestingUserId != userId {
-		presenter.ErrorPresenter(w, http.StatusForbidden, errors.New("not allowed"))
+		presenter.ErrorPresenter(w, statusCode, err)
 		return
 	}
 

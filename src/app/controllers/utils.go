@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"devbook-api/src/infra/auth"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"strconv"
@@ -31,4 +33,16 @@ func GetUserId(r *http.Request) (uint64, error) {
 	}
 
 	return userId, nil
+}
+
+func IsUserAllowed(r *http.Request, affectedUserId uint64) (statusCode int, err error) {
+	requestingUserId, err := auth.ExtractUserId(r)
+	if err != nil {
+		return http.StatusUnauthorized, err
+	}
+	if requestingUserId != affectedUserId {
+		return http.StatusForbidden, errors.New("not allowed")
+	}
+
+	return 0, nil
 }
