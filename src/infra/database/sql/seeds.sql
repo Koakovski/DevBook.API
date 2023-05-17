@@ -11,3 +11,9 @@ VALUES
 (1, 2),
 (3, 1),
 (1, 3);
+
+INSERT INTO publications (title, content, authorId) 
+VALUES 
+("Publicação Higor K.", "Conteudo legal.", 1),
+("Publicação Pedro R.", "Conteudo interessante.", 2),
+("Publicação Luis Q.", "Conteudo engraçado.", 3);
