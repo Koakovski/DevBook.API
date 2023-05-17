@@ -36,11 +36,9 @@ var PublicationRoute = []Route{
 	},
 	// DELETE PUBLICATION
 	{
-		Uri:    "/publication/{id}",
-		Method: http.MethodDelete,
-		Handler: func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("DELETE PUBLICATION"))
-		},
+		Uri:       "/publication/{id}",
+		Method:    http.MethodDelete,
+		Handler:   controller.PublicationDeleteController,
 		IsPrivate: true,
 	},
 }
