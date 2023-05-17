@@ -39,10 +39,11 @@ func (publicationRepository publicationRepository) Create(publicationModel model
 
 	return uint64(publicationId), nil
 }
+
 func (publicationRepository publicationRepository) FindById(publicationId uint64) (model.Publication, error) {
 	var publication model.Publication
 
-	rows, err := publicationRepository.db.Query(`
+	row, err := publicationRepository.db.Query(`
 		SELECT p.id, p.title, p.content, p.likes, p.authorId, p.createdAt, 
 		u.id, u.name, u.nickName, u.email, u.createdAt FROM publications p
 		INNER JOIN users u
@@ -53,10 +54,10 @@ func (publicationRepository publicationRepository) FindById(publicationId uint64
 	if err != nil {
 		return publication, err
 	}
-	defer rows.Close()
+	defer row.Close()
 
-	for rows.Next() {
-		if err = rows.Scan(
+	if row.Next() {
+		if err = row.Scan(
 			&publication.ID,
 			&publication.Title,
 			&publication.Content,
@@ -74,4 +75,47 @@ func (publicationRepository publicationRepository) FindById(publicationId uint64
 	}
 
 	return publication, nil
+}
+
+func (publicationRepository publicationRepository) FindAll(userId uint64) ([]model.Publication, error) {
+	var publications []model.Publication
+
+	rows, err := publicationRepository.db.Query(`
+		SELECT DISTINCT p.id, p.title, p.content, p.likes, p.authorId, p.createdAt, 
+		u.id, u.name, u.nickName, u.email, u.createdAt FROM publications p
+		INNER JOIN users u
+		ON u.id = p.authorId 
+		INNER JOIN followers f
+		ON p.authorId = f.userId
+		WHERE u.id = ? OR f.followerId = ?
+		ORDER BY 1 desc
+	`, userId, userId,
+	)
+	if err != nil {
+		return publications, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var publication model.Publication
+		if err = rows.Scan(
+			&publication.ID,
+			&publication.Title,
+			&publication.Content,
+			&publication.Likes,
+			&publication.AuthorId,
+			&publication.CreatedAt,
+			&publication.Author.ID,
+			&publication.Author.Name,
+			&publication.Author.NickName,
+			&publication.Author.Email,
+			&publication.Author.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+
+		publications = append(publications, publication)
+	}
+
+	return publications, nil
 }

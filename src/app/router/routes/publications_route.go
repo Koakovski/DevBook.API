@@ -15,19 +15,17 @@ var PublicationRoute = []Route{
 	},
 	// FIND ALL PUBLICATIONS
 	{
-		Uri:    "/publication",
-		Method: http.MethodGet,
-		Handler: func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("FIND ALL PUBLICATIONS"))
-		},
-		IsPrivate: false,
+		Uri:       "/publication",
+		Method:    http.MethodGet,
+		Handler:   controller.PublicationFindAllController,
+		IsPrivate: true,
 	},
 	// FIND ONE PUBLICATION
 	{
 		Uri:       "/publication/{id}",
 		Method:    http.MethodGet,
 		Handler:   controller.PublicationFindOneController,
-		IsPrivate: false,
+		IsPrivate: true,
 	},
 	// UPDATE PUBLICATION
 	{
@@ -45,6 +43,6 @@ var PublicationRoute = []Route{
 		Handler: func(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte("DELETE PUBLICATION"))
 		},
-		IsPrivate: false,
+		IsPrivate: true,
 	},
 }

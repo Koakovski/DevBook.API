@@ -75,3 +75,27 @@ func PublicationFindOneController(w http.ResponseWriter, r *http.Request) {
 
 	presenter.ReponsePresenter(w, http.StatusOK, publication)
 }
+
+func PublicationFindAllController(w http.ResponseWriter, r *http.Request) {
+	requestingUserId, err := auth.ExtractUserId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	db, err := database.GetDbConnection()
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	publicationRepository := repository.GetPublicationRepository(db)
+	publications, err := publicationRepository.FindAll(requestingUserId)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	presenter.ReponsePresenter(w, http.StatusOK, publications)
+}
