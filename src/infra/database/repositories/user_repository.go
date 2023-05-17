@@ -152,7 +152,7 @@ func (userRepository userRepository) Follow(userId, userToFollowId uint64) error
 	}
 	defer statement.Close()
 
-	if _, err = statement.Exec(userId, userToFollowId); err != nil {
+	if _, err = statement.Exec(userToFollowId, userId); err != nil {
 		return err
 	}
 
@@ -168,7 +168,7 @@ func (userRepository userRepository) Unfollow(userId, userToFollowId uint64) err
 	}
 	defer statement.Close()
 
-	if _, err = statement.Exec(userId, userToFollowId); err != nil {
+	if _, err = statement.Exec(userToFollowId, userId); err != nil {
 		return err
 	}
 
