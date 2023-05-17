@@ -18,7 +18,7 @@ CREATE TABLE followers(
     userId int not null,
     FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
     followerId int not null,
-    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (followerId) REFERENCES users(id) ON DELETE CASCADE,
 
     primary key (userId, followerId)
 ) ENGINE=INNODB;
