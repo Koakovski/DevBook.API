@@ -29,11 +29,9 @@ var PublicationRoute = []Route{
 	},
 	// UPDATE PUBLICATION
 	{
-		Uri:    "/publication/{id}",
-		Method: http.MethodPut,
-		Handler: func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("UPDATE PUBLICATION"))
-		},
+		Uri:       "/publication/{id}",
+		Method:    http.MethodPut,
+		Handler:   controller.PublicationUpdateController,
 		IsPrivate: false,
 	},
 	// DELETE PUBLICATION

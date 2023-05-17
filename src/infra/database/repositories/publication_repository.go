@@ -119,3 +119,23 @@ func (publicationRepository publicationRepository) FindAll(userId uint64) ([]mod
 
 	return publications, nil
 }
+
+func (publicationRepository publicationRepository) Update(publicationModel model.Publication) error {
+	statment, err := publicationRepository.db.Prepare(
+		"UPDATE publications SET title = ?, content = ? WHERE id = ?",
+	)
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err := statment.Exec(
+		publicationModel.Title,
+		publicationModel.Content,
+		publicationModel.ID,
+	); err != nil {
+		return err
+	}
+
+	return nil
+}

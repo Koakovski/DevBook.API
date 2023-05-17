@@ -99,3 +99,54 @@ func PublicationFindAllController(w http.ResponseWriter, r *http.Request) {
 
 	presenter.ReponsePresenter(w, http.StatusOK, publications)
 }
+
+func PublicationUpdateController(w http.ResponseWriter, r *http.Request) {
+	requestingUserId, err := auth.ExtractUserId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusUnauthorized, err)
+		return
+	}
+
+	publicationId, err := GetId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
+	db, err := database.GetDbConnection()
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	publicationRepository := repository.GetPublicationRepository(db)
+	databasePublication, err := publicationRepository.FindById(publicationId)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if databasePublication.AuthorId != requestingUserId {
+		presenter.ErrorPresenter(w, http.StatusForbidden, errors.New("not allowed"))
+		return
+	}
+
+	var publicationModel model.Publication
+	statusCode, err := GetDataFromBody(r, &publicationModel, true)
+	if err != nil {
+		presenter.ErrorPresenter(w, statusCode, err)
+		return
+	}
+
+	publicationModel.ID = publicationId
+
+	publicationModel.Prepare()
+
+	if err := publicationRepository.Update(publicationModel); err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	presenter.ReponsePresenter(w, http.StatusNoContent, nil)
+}
