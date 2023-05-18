@@ -41,4 +41,11 @@ var PublicationRoute = []Route{
 		Handler:   controller.PublicationDeleteController,
 		IsPrivate: true,
 	},
+	// FIND ALL PUBLICATIONS OF USER
+	{
+		Uri:       "/user/{id}/publication",
+		Method:    http.MethodGet,
+		Handler:   controller.PublicationFindAllOfUserController,
+		IsPrivate: true,
+	},
 }

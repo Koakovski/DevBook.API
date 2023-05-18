@@ -187,6 +187,28 @@ func PublicationDeleteController(w http.ResponseWriter, r *http.Request) {
 		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
 		return
 	}
+}
 
-	presenter.ReponsePresenter(w, http.StatusNoContent, nil)
+func PublicationFindAllOfUserController(w http.ResponseWriter, r *http.Request) {
+	userId, err := GetId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
+	db, err := database.GetDbConnection()
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	publicationRepository := repository.GetPublicationRepository(db)
+	publications, err := publicationRepository.FindAllOfUser(userId)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	presenter.ReponsePresenter(w, http.StatusOK, publications)
 }

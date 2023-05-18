@@ -157,3 +157,42 @@ func (publicationRepository publicationRepository) Delete(publicationId uint64) 
 
 	return nil
 }
+
+func (publicationRepository publicationRepository) FindAllOfUser(userId uint64) ([]model.Publication, error) {
+	var publications []model.Publication
+
+	rows, err := publicationRepository.db.Query(`
+	SELECT DISTINCT p.id, p.title, p.content, p.likes, p.authorId, p.createdAt, 
+	u.id, u.name, u.nickName, u.email, u.createdAt FROM publications p
+	JOIN users u
+	ON u.id = p.authorId 
+	WHERE p.authorId = ?
+	`, userId)
+	if err != nil {
+		return publications, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var publication model.Publication
+		if err = rows.Scan(
+			&publication.ID,
+			&publication.Title,
+			&publication.Content,
+			&publication.Likes,
+			&publication.AuthorId,
+			&publication.CreatedAt,
+			&publication.Author.ID,
+			&publication.Author.Name,
+			&publication.Author.NickName,
+			&publication.Author.Email,
+			&publication.Author.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+
+		publications = append(publications, publication)
+	}
+
+	return publications, nil
+}
