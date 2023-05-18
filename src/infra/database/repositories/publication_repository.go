@@ -213,3 +213,24 @@ func (publicationRepository publicationRepository) Like(publicationId uint64) er
 
 	return nil
 }
+
+func (publicationRepository publicationRepository) Unlike(publicationId uint64) error {
+	statment, err := publicationRepository.db.Prepare(`
+		UPDATE publications SET likes =
+		CASE 
+			WHEN likes > 0 THEN likes - 1
+			ELSE likes 
+		END
+		WHERE publications.id = ?
+	`)
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err := statment.Exec(publicationId); err != nil {
+		return err
+	}
+
+	return nil
+}

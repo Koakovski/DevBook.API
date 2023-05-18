@@ -55,4 +55,11 @@ var PublicationRoute = []Route{
 		Handler:   controller.PublicationLikeController,
 		IsPrivate: true,
 	},
+	// UNLIKE A PUBLICATION
+	{
+		Uri:       "/publication/{id}/unlike",
+		Method:    http.MethodPost,
+		Handler:   controller.PublicationUnlikeController,
+		IsPrivate: true,
+	},
 }
