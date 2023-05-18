@@ -212,3 +212,27 @@ func PublicationFindAllOfUserController(w http.ResponseWriter, r *http.Request) 
 
 	presenter.ReponsePresenter(w, http.StatusOK, publications)
 }
+
+func PublicationLikeController(w http.ResponseWriter, r *http.Request) {
+	publicationId, err := GetId(r)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusBadRequest, err)
+		return
+	}
+
+	db, err := database.GetDbConnection()
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	publicationRepository := repository.GetPublicationRepository(db)
+	err = publicationRepository.Like(publicationId)
+	if err != nil {
+		presenter.ErrorPresenter(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	presenter.ReponsePresenter(w, http.StatusNoContent, nil)
+}

@@ -196,3 +196,20 @@ func (publicationRepository publicationRepository) FindAllOfUser(userId uint64) 
 
 	return publications, nil
 }
+
+func (publicationRepository publicationRepository) Like(publicationId uint64) error {
+	statment, err := publicationRepository.db.Prepare(`
+		UPDATE publications SET likes = likes + 1 
+		WHERE publications.id = ?
+	`)
+	if err != nil {
+		return err
+	}
+	defer statment.Close()
+
+	if _, err := statment.Exec(publicationId); err != nil {
+		return err
+	}
+
+	return nil
+}

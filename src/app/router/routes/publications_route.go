@@ -48,4 +48,11 @@ var PublicationRoute = []Route{
 		Handler:   controller.PublicationFindAllOfUserController,
 		IsPrivate: true,
 	},
+	// LIKE A PUBLICATION
+	{
+		Uri:       "/publication/{id}/like",
+		Method:    http.MethodPost,
+		Handler:   controller.PublicationLikeController,
+		IsPrivate: true,
+	},
 }
