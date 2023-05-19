@@ -8,6 +8,7 @@ import (
 	repository "devbook-api/src/infra/database/repositories"
 	"devbook-api/src/infra/security"
 	"net/http"
+	"strconv"
 )
 
 func AuthLoginController(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +39,13 @@ func AuthLoginController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userId := strconv.FormatUint(databaseUser.ID, 10)
 	token, _ := auth.CreateToken(databaseUser.ID)
 
-	presenter.ReponsePresenter(w, http.StatusOK, token)
+	authData := model.AuthData{
+		UserId: userId,
+		Token:  token,
+	}
+
+	presenter.ReponsePresenter(w, http.StatusOK, authData)
 }
